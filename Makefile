@@ -1,16 +1,19 @@
 CXX = g++
 CXXFLAGS	= -std=c++11 -Wall
 
-all: ElectoralMap
-	
-run: ElectoralMap
-	./ElectoralMap
+all: election
 
 clean:
-	rm ElectoralMap.o ElectoralMap
+	rm election Election.o ElectoralMap.o TextUI.o
 
-ElectoralMap: ElectoralMap.o main.cpp
-	$(CXX) $(CXXFLAGS) main.cpp ElectoralMap.o -o ElectoralMap
+election: main.cpp Election.o ElectoralMap.o TextUI.o
+	$(CXX) $(CXXFLAGS) main.cpp Election.o ElectoralMap.o TextUI.o -o election
+
+TextUI.o: TextUI.cpp
+	$(CXX) $(CXXFLAGS) -c TextUI.cpp
+
+Election.o: Election.cpp
+	$(CXX) $(CXXFLAGS) -c Election.cpp
 
 ElectoralMap.o: ElectoralMap.cpp
 	$(CXX) $(CXXFLAGS) -c ElectoralMap.cpp

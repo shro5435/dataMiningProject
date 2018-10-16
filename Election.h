@@ -1,4 +1,4 @@
-//Shania Roy 
+//Shania Roy
 #ifndef _ELECTION_H_
 #define _ELECTION_H_
 
@@ -12,43 +12,46 @@
 #include <math.h>
 #include <map>
 #include <iterator>
-#include "ElectoralMap.h"
+//#include "ElectoralMap.h"
 using namespace std;
 
 enum class Party { None, Republican, Democratic};
-string PartyStringify(Party p); 
+string PartyStringify(Party p);
 
 class Election{
 public:
-	void campaign();
-	int vote(); 
+	Election();
+	//void campaign();
+	//int vote();
+	void setPartyVal(Party,int);
 private:
-
-
-
+	//vector<Candidate *> candidates_;
 
 };
 
 
-class Candidate{ //do 
-	public: 
-	String Stringify();  
-	String getName(){return name };
-	Party getAffil(){return affil}; 
-	int getId(){return id};
+class Candidate{ //do
+	public:
+	Candidate(int id_, string name_, Party affil_);
+	string Stringify();
+	string getName(){return name; };
+	Party getAffil(){return affil; };
+	int getId(){return id; };
 
 
-	private: 
-	string name; 
-	Party affil; 
-	int id; 
+	private:
+	string name;
+	Party affil;
+	int id;
 
-}; 
-
-
-class RepresentativeElection : public Election{ //inherits election 
-public:  
-private: 
-
-	
 };
+
+
+class RepresentativeElection : public Election{ //inherits election
+public:
+private:
+	//vector<Candidate *> candidates_;
+
+};
+
+#endif
