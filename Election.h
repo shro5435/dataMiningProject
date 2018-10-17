@@ -1,4 +1,3 @@
-//Shania Roy
 #ifndef _ELECTION_H_
 #define _ELECTION_H_
 
@@ -22,6 +21,7 @@ string PartyStringify(Party p);
 class Candidate{ //do
 	public:
 	Candidate(int id_, string name_, Party affil_);
+	Candidate();
 	string Stringify();
 	string getName(){return name; };
 	Party getAffil(){return affil; };
@@ -40,10 +40,11 @@ class Election{
 public:
 	Election();
 	void campaign(Candidate *c, District *d);
-	//Candidate vote(ElectoralMap &s);
+ 	Party vote(ElectoralMap &s);
 	void setPartyVal(Party,int);
 	void AddCandidate();
 	void printCandidates();
+	void ElectionWinner(Party majority);
 
 	vector<Candidate *> candidates_;
 
@@ -56,7 +57,7 @@ private:
 class RepresentativeElection : public Election{ //inherits election
 public:
 	RepresentativeElection();
-	vector<Candidate *> candidates_;
+	//vector<Candidate *> candidates_;
 private:
 
 };

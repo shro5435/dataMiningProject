@@ -1,5 +1,5 @@
-//Shania Roy
 #include "Election.h"
+#include <math.h>
 
 Election::Election(){
 
@@ -10,7 +10,7 @@ void Election::AddCandidate(){
   int canId = 1;
   string choice;
 
-  cout<< "would you like to add a Republican candidate? y or n ";
+  cout<< "Would you like to add a Republican candidate? y or n ";
   cin>> choice;
 
   while(choice == "y")
@@ -24,12 +24,12 @@ void Election::AddCandidate(){
     candidates_.push_back(c1);
     canId++;
 
-    cout<< "would you like to add a Republican candidate? y or n ";
+    cout<< "Would you like to add a Republican candidate? y or n ";
     cin>> choice;
 
   }
 
-  cout<< "would you like to add a Democratic candidate? y or n ";
+  cout<< "Would you like to add a Democratic candidate? y or n ";
   cin>> choice;
 
   while(choice == "y")
@@ -71,7 +71,9 @@ std::string PartyStringify(Party p) //tested and working
          return "Democratic";
     }
 
+}
 
+Candidate::Candidate(){
 
 }
 
@@ -88,57 +90,6 @@ string Candidate::Stringify(){
 	string info = "-------------------\n" + to_string(id) + ": " + name + " [Party: " + PartyStringify(affil) + "]\n";
 	return info;
 }
-
-
-/*
-int Election::Vote(){
-
-voter v;
-District c;
-int ctypeVotes=0;
-int nonctypeVotes=0;
-int nonctypeVotes;
-Party districtWinner;
-if(v.getAffil() != Party::None)
- {
-
-	Party ctype = c.getAffil();
-	if(ctype == Party::Democratic)
-	{
-		//randomize with 70% odds that this voter votes for Democratic
-	}
-	if(ctype == Party::Republican)
-	{
-		//randomize with 70% odds that this voter votes for Republican
-	}
-	//how to implement ctype and a "potential voter"
-
-}
-
-
- if(v.vote() == ctype)
- {
-
- 	ctypeVotes = ctypeVotes+1;
- }
-
-if(v.vote() != ctype)
-{
-	nonctypeVotes = nonctypeVotes+1;
-}
-if(ctypeVotes > nonctypeVotes)
-{
-
-	 districtWinner = ctypeVotes;
-}
-else{
-
-	districtWinner = nonctypeVotes;
-}
-return districtWinner;
-}
-*/
-
 
 void Election::campaign(Candidate * c, District *d)
 {
@@ -198,32 +149,127 @@ void Election::campaign(Candidate * c, District *d)
     }
   }
 }
-/*
-Candidate Election::vote(ElectoralMap &s){
+
+
+Party Election::vote(ElectoralMap &s){
+  Party majority;
+
   for(auto const& x : s.district_map)
   {
-    District *temp = *(x.second)
-    int n_voters = temp->party_array[0];
-    int r_voters = temp->party_array[1];
-    int d_voters = temp->party_array[2];
+    District temp = *(x.second);
+    int n_voters = temp.party_array[0];
+    int r_voters = temp.party_array[1];
+    int d_voters = temp.party_array[2];
 
-    Party majority;
-    if(r_voters > d_voters){
+
+    if(d_voters == 0 && r_voters > d_voters){
+      r_voters = r_voters + n_voters;
+
+      temp.party_array[1] = r_voters;
       majority = Party::Republican;
-      r_voters = r_voters*.9;
-      n_voters = n_voters *.7;
-      temp->party_array[1] = temp->party_array[1]+n_voters;
     }
-    else{
-      majority = Party::Democrat;
-      n_voters = n_voters *.7;
-      temp->party_array[1] = temp->party_array[1]+n_voters;
-    }
+    else if(r_voters == 0 && d_voters > r_voters){
+      d_voters = d_voters + n_voters;
 
+      temp.party_array[2] = d_voters;
+      majority = Party::Democratic;
+    }
+    else if(r_voters > d_voters){
+      int n_majority_voters = round(n_voters * 0.7);
+      int n_minority_voters = round(n_voters * 0.3);
+
+      int r_majority_voters = round(r_voters * 0.9);
+      int r_other_voters = round(r_voters * 0.1);
+
+      int d_majority_voters = round(d_voters * 0.9);
+      int d_other_voters = round(d_voters * 0.1);
+
+      r_majority_voters = r_majority_voters + n_majority_voters + d_other_voters;
+      d_majority_voters = d_majority_voters + n_minority_voters + r_other_voters;
+
+      cout << r_majority_voters << endl;
+      cout << d_majority_voters << endl;
+
+      temp.party_array[1] = r_majority_voters;
+      temp.party_array[2] = d_majority_voters;
+      if(r_majority_voters > d_majority_voters){
+        majority = Party::Republican;
+      }
+      else{
+        majority = Party::Democratic;
+      }
+    }
+    else if (d_voters > r_voters){
+      majority = Party::Democratic;
+
+      int n_majority_voters = round(n_voters * 0.7);
+      int n_minority_voters = round(n_voters * 0.3);
+
+      int d_majority_voters = round(d_voters * 0.9);
+      int d_other_voters = round(d_voters * 0.1);
+
+      int r_majority_voters = round(r_voters * 0.9);
+      int r_other_voters = round(r_voters * 0.1);
+
+      d_majority_voters = d_majority_voters + n_majority_voters + r_other_voters;
+      r_majority_voters = r_majority_voters + n_minority_voters + d_other_voters;
+
+      cout << r_majority_voters << endl;
+      cout << d_majority_voters << endl;
+
+      temp.party_array[2] = d_majority_voters;
+      temp.party_array[1] = r_majority_voters;
+
+      if(d_majority_voters > r_majority_voters){
+        majority = Party::Democratic;
+      }
+      else{
+        majority = Party::Republican;
+      }
+     }
+  }
+  return majority;
+}
+
+void Election::ElectionWinner(Party majority){
+
+  std::vector<Candidate*> R;
+  std::vector<Candidate*> D;
+  Candidate *winner;
+  for(int i=0; i<candidates_.size(); i++) //every candidate in
+  {
+    Party ofCand = candidates_[i]->getAffil();
+
+    if(ofCand == Party::Republican )
+    {
+      R.push_back(candidates_[i]);
+    }
+    else if(ofCand == Party::Democratic)
+    {
+      D.push_back(candidates_[i]);
+    }
 
   }
+  
+  if(majority == Party::Republican)
+  {
+    srand(time(NULL));
+    int random = rand() % (R.size()-1) + 0;
+
+    winner = R[random];
+
+  }
+  else if(majority == Party::Democratic)
+  {
+    srand(time(NULL));
+    int random = rand() % (D.size()-1) + 0;
+
+    winner = D[random];
+
+  }
+
+  cout<<"winner is " << winner->getName();
 }
-*/
 
 RepresentativeElection::RepresentativeElection(){
 

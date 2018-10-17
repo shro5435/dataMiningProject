@@ -13,6 +13,9 @@ TextUI::TextUI() {
 
 void TextUI::RouteChoice(ElectoralMap &map) {
   string choice;
+  int can_id = -1;
+  int dist_id = -1;
+
   while(choice != "0"){
     cout << "What kind of election should we have (direct or representative, 0 to stop)? ";
     cin >> choice;
@@ -23,27 +26,37 @@ void TextUI::RouteChoice(ElectoralMap &map) {
       cout << map;
       e.printCandidates();
 
-      while(choice != "0"){
-        int can_id;
+      while(can_id != 0){
         cout << "Which candidate is campaigning (id) (0 to stop) ? ";
         cin >> can_id;
 
-        Candidate * l = e.candidates_[can_id - 1];
-        cout << map;
-
-        while(choice != "0"){
-          int dist_id;
-          cout << "Where is this candidate campaigning (id) (0 to stop) ? ";
-          cin >> dist_id;
-
-          District * d = map.district_map[dist_id];
-          e.campaign(l,d);
+        if(can_id == 0){
+          break;
+        }
+        else{
+          Candidate * l = e.candidates_[can_id - 1];
           cout << map;
+
+          while(dist_id != 0){
+            cout << "Where is this candidate campaigning (id) (0 to stop) ? ";
+            cin >> dist_id;
+
+            if(dist_id == 0){
+              break;
+            }
+            else{
+              District * d = map.district_map[dist_id];
+              e.campaign(l,d);
+              cout << map;
+            }
+          }
         }
       }
-
       e.printCandidates();
-
+      cout << map;
+      Party majority = e.vote(map);
+      cout << "Hello";
+      e.ElectionWinner(majority);
 
     }
 
@@ -51,11 +64,38 @@ void TextUI::RouteChoice(ElectoralMap &map) {
     {
       RepresentativeElection e;
       e.AddCandidate();
-      e.printCandidates();
       cout << map;
-    }
-  }
+      e.printCandidates();
 
+      while(can_id != 0){
+        cout << "Which candidate is campaigning (id) (0 to stop) ? ";
+        cin >> can_id;
+
+        if(can_id == 0){
+          break;
+        }
+        else{
+          Candidate * l = e.candidates_[can_id - 1];
+          cout << map;
+
+          while(dist_id != 0){
+            cout << "Where is this candidate campaigning (id) (0 to stop) ? ";
+            cin >> dist_id;
+
+            if(dist_id == 0){
+              break;
+            }
+            else{
+              District * d = map.district_map[dist_id];
+              e.campaign(l,d);
+              cout << map;
+            }
+          }
+        }
+      }
+      e.printCandidates();
+    }
+}
 /*
   for(int i = 0; i < e.candidates_.size(); i++){
     cout << e.candidates_[i]->Stringify() << endl;
