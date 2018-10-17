@@ -1,14 +1,18 @@
 #include "ElectoralMap.h"
+#include "TextUI.h"
+#include <time.h>
+#include <string>
+
 
 int main()
 {
 	//Electoral Map R = new ElectoralMap();
+	srand(static_cast<int>(time(0)));
 	ElectoralMap &R = ElectoralMap::GetInstance();
-	cout<<R;
 
-	Candidate c(1, "John", Party::None);
+	TextUI main;
+	main.RouteChoice(R);
 
-	cout << c.Stringify() << endl;
 	return 0;
 
 }

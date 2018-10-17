@@ -12,7 +12,6 @@
 #include <map>
 #include <iterator>
 
-#include "Election.h"
 using namespace std;
 
 class District{
@@ -23,21 +22,14 @@ int get_id();
 int get_area();
 std::string ToString() const;
 friend std::ostream& operator<<(std::ostream& os, const District &d); //function with access to private variables;
-//<<(d) function name parameter
-/*
-int get_n_voters() { return none_voters; }
-int get_r_voters() { return r_voters; }
-int get_d_voters() { return d_voters; }
-*/
 
+double party_array[3];
 
 private:
 	static int class_id; //to be accessed from static methods; without an instance (how many)
 	int instance_id; //actual id for each district
 	int area;
-	int party_array[3]; //element 0: None, element 1: Republican, element 2: Democratic
-
-
+	 //element 0: None, element 1: Republican, element 2: Democratic
 };
 
 //should assign unique ids to 4 different Districts and store them in a map with id(static field)mapping to District.
@@ -54,10 +46,10 @@ static ElectoralMap& GetInstance(){
 friend std::ostream& operator<<(std::ostream& os, const ElectoralMap &e);
 
 District* get_district(int id);
+std::map <int, District*> district_map;
 
 private:
 ElectoralMap();  //private because its a singleton class
-std::map <int, District*> district_map;
 };
 
 

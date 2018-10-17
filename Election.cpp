@@ -5,11 +5,56 @@ Election::Election(){
 
 }
 
+void Election::AddCandidate(){
+  string canName;
+  int canId = 1;
+  string choice;
 
+  cout<< "would you like to add a Republican candidate? y or n ";
+  cin>> choice;
+
+  while(choice == "y")
+  {
+    cout<< "What is the name of your candidate? ";
+    cin>> canName;
+
+    //Candidate r(canId, canName, Party::Republican);
+
+    Candidate * c1 = new Candidate(canId, canName, Party::Republican);
+    candidates_.push_back(c1);
+    canId++;
+
+    cout<< "would you like to add a Republican candidate? y or n ";
+    cin>> choice;
+
+  }
+
+  cout<< "would you like to add a Democratic candidate? y or n ";
+  cin>> choice;
+
+  while(choice == "y")
+  {
+    cout<< "What is the name of your candidate? ";
+    cin>> canName;
+
+    ///Candidate r(canId, canName, Party::Democratic);
+
+    Candidate * c1 = new Candidate(canId, canName, Party::Democratic);
+    candidates_.push_back(c1);
+    canId++;
+
+    cout<< "would you like to add a Democratic candidate? y or n ";
+    cin>> choice;
+  }
+}
+
+void Election::printCandidates(){
+  for(int i = 0; i < candidates_.size(); i++){
+    cout << candidates_[i]->Stringify() << endl;
+  }
+}
 std::string PartyStringify(Party p) //tested and working
 {
-
-
     //generate the characters
     //character
 
@@ -43,6 +88,8 @@ string Candidate::Stringify(){
 	string info = "-------------------\n" + to_string(id) + ": " + name + " [Party: " + PartyStringify(affil) + "]\n";
 	return info;
 }
+
+
 /*
 int Election::Vote(){
 
@@ -90,13 +137,94 @@ else{
 }
 return districtWinner;
 }
+*/
 
 
-
-void Election::campaign()
+void Election::campaign(Candidate * c, District *d)
 {
+  Party can = c->getAffil();
+  if(can == Party::Republican){
+    double p_success = ((d->party_array[1] + 1) * 2)/(d->party_array[2]) * ((d->party_array[1] + 1) * 2)/(d->get_area());
+    double p_extra = p_success * 0.1;
+
+    cout << "Chances to convert: " << p_success << endl;
+    cout << "Chances to convert from another party: " << p_extra << endl;
+
+    if(p_success > 1.00 && p_extra < 1.00){
+      d->party_array[1] = d->party_array[1] + 1;
+      d->party_array[0] = d->party_array[0] - 1;
+      cout << "Congrats! You've converted someone from none to Republican" << endl;
+    }
+    else if(p_success > 1.00 && p_extra > 1.00){
+      d->party_array[1] = d->party_array[1] + 2;
+      d->party_array[0] = d->party_array[0] - 1;
+      d->party_array[2] = d->party_array[2] - 1;
+      cout << "Congrats! You've converted someone from none to Republican and someone from Democrat to Republican" << endl;;
+    }
+    else if(p_success > 1.00 && p_extra > 1.00 && d->party_array[0] == 0){
+      d->party_array[1] = d->party_array[1] + 1;
+      d->party_array[2] = d->party_array[2] - 1;
+      cout << "Congrats! You've converted someone from Democrat to Republican";
+    }
+    else if(p_success < 1.00 || d->party_array[1] == 0){
+      cout << "No one was converted" << endl;
+    }
+  }
+  else if(can == Party::Democratic){
+    double p_success = ((d->party_array[2] + 1) * 2)/(d->party_array[1]) * ((d->party_array[2] + 1) * 2)/(d->get_area());
+    double p_extra = p_success * 0.1;
+
+    cout << "Chances to convert: " << p_success << endl;
+    cout << "Chances to convert from another party: " << p_extra << endl;
+
+    if(p_success > 1.00 && p_extra < 1.00){
+      d->party_array[2] = d->party_array[2] + 1;
+      d->party_array[0] = d->party_array[0] - 1;
+      cout << "Congrats! You've converted someone from none to Democrat" << endl;
+    }
+    else if(p_success > 1.00 && p_extra > 1.00){
+      d->party_array[2] = d->party_array[2] + 2;
+      d->party_array[0] = d->party_array[0] - 1;
+      d->party_array[1] = d->party_array[1] - 1;
+      cout << "Congrats! You've converted someone from none to Democrat and someone from Republican to Democrat" << endl;;
+    }
+    else if(p_success > 1.00 && p_extra > 1.00 && d->party_array[0] == 0){
+      d->party_array[2] = d->party_array[2] + 1;
+      d->party_array[1] = d->party_array[1] - 1;
+      cout << "Congrats! You've converted someone from Republican to Democrat";
+    }
+    else if(p_success < 1.00 || d->party_array[2] == 0){
+      cout << "No one was converted" << endl;
+    }
+  }
+}
+/*
+Candidate Election::vote(ElectoralMap &s){
+  for(auto const& x : s.district_map)
+  {
+    District *temp = *(x.second)
+    int n_voters = temp->party_array[0];
+    int r_voters = temp->party_array[1];
+    int d_voters = temp->party_array[2];
+
+    Party majority;
+    if(r_voters > d_voters){
+      majority = Party::Republican;
+      r_voters = r_voters*.9;
+      n_voters = n_voters *.7;
+      temp->party_array[1] = temp->party_array[1]+n_voters;
+    }
+    else{
+      majority = Party::Democrat;
+      n_voters = n_voters *.7;
+      temp->party_array[1] = temp->party_array[1]+n_voters;
+    }
 
 
-
+  }
 }
 */
+
+RepresentativeElection::RepresentativeElection(){
+
+}

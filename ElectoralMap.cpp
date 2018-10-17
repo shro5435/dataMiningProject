@@ -22,11 +22,9 @@ District::District() //add a map to an integer
 	class_id = class_id+1; //increments everytime an instance of district is made
 	area = (rand()% 25)+5; //random number between 5 and 29
 
-party_array[0] = (rand()%9)+1; //None
-party_array[1] = (rand()%9)+1; //Republican
-party_array[2] = (rand()%9)+1; //Democratic
-
-
+party_array[0] = (rand()%9); //None
+party_array[1] = (rand()%9); //Republican
+party_array[2] = (rand()%9); //Democratic
 
 }
 int District::get_id()

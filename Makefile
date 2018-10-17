@@ -12,8 +12,8 @@ election: main.cpp Election.o ElectoralMap.o TextUI.o
 TextUI.o: TextUI.cpp
 	$(CXX) $(CXXFLAGS) -c TextUI.cpp
 
+ElectoralMap.o: ElectoralMap.cpp
+		$(CXX) $(CXXFLAGS) -c ElectoralMap.cpp
+
 Election.o: Election.cpp
 	$(CXX) $(CXXFLAGS) -c Election.cpp
-
-ElectoralMap.o: ElectoralMap.cpp
-	$(CXX) $(CXXFLAGS) -c ElectoralMap.cpp

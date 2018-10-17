@@ -12,23 +12,12 @@
 #include <math.h>
 #include <map>
 #include <iterator>
-//#include "ElectoralMap.h"
+
+#include "ElectoralMap.h"
 using namespace std;
 
 enum class Party { None, Republican, Democratic};
 string PartyStringify(Party p);
-
-class Election{
-public:
-	Election();
-	//void campaign();
-	//int vote();
-	void setPartyVal(Party,int);
-private:
-	//vector<Candidate *> candidates_;
-
-};
-
 
 class Candidate{ //do
 	public:
@@ -47,10 +36,28 @@ class Candidate{ //do
 };
 
 
+class Election{
+public:
+	Election();
+	void campaign(Candidate *c, District *d);
+	//Candidate vote(ElectoralMap &s);
+	void setPartyVal(Party,int);
+	void AddCandidate();
+	void printCandidates();
+
+	vector<Candidate *> candidates_;
+
+private:
+
+
+};
+
+
 class RepresentativeElection : public Election{ //inherits election
 public:
+	RepresentativeElection();
+	vector<Candidate *> candidates_;
 private:
-	//vector<Candidate *> candidates_;
 
 };
 
